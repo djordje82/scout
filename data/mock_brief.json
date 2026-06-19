@@ -1,0 +1,116 @@
+{
+  "company": "Notion",
+  "researchFocus": "General competitive landscape",
+  "budget": 5,
+  "brief": {
+    "overview": "Notion remains the dominant all-in-one workspace tool, with ~30 million users and strong enterprise growth. However, it faces intensifying pressure from AI-native entrants (Coda AI, Mem, Reflect) and entrenched players adding AI layers (Confluence, Google Docs, Microsoft Loop). Its moat is deep template ecosystems and block-based flexibility, but performance at scale and offline support remain persistent complaints. The AI features launched in 2024–2025 have narrowed the gap with purpose-built AI tools but have not yet differentiated Notion as an AI-first product.",
+    "competitors": [
+      {
+        "name": "Coda",
+        "summary": "Closest structural rival — also a doc/database hybrid. Coda AI is more deeply embedded into formulas and automations. Stronger with operations teams. Smaller user base (~1M) but higher ARPU. Recently raised $100M Series D at a $1.4B valuation."
+      },
+      {
+        "name": "Confluence (Atlassian)",
+        "summary": "Dominates enterprise wiki/knowledge-base market. Deep Jira integration is a lock-in lever. UI is aging but Atlassian's enterprise sales motion is formidable. Adding AI summarisation and smart search via Atlassian Intelligence. Key risk to Notion's enterprise push."
+      },
+      {
+        "name": "Microsoft Loop",
+        "summary": "Microsoft's block-based collaborative workspace, tightly integrated with Teams, 365, and Copilot. Free with M365 licenses — a serious pricing threat for enterprise Notion deals. Still maturing but adoption accelerating inside orgs already on M365."
+      },
+      {
+        "name": "Obsidian",
+        "summary": "Owns the power-user/PKM niche with local-first, offline-native Markdown. Plugin ecosystem is unmatched. Not a direct enterprise threat but draws away technical users who might otherwise be Notion advocates."
+      },
+      {
+        "name": "Linear (for docs)",
+        "summary": "Linear Docs positions Linear as a single tool for eng teams — specs, issues, and docs in one place. Niche but high signal: engineering teams actively replacing Notion+Jira stacks with Linear."
+      }
+    ],
+    "recentMoves": [
+      {
+        "date": "2026-05-14",
+        "event": "Notion launched 'Notion Mail' beta — AI-native email client integrated directly into the workspace, pulling context from pages and databases to draft replies.",
+        "source": "https://notion.so/blog/notion-mail"
+      },
+      {
+        "date": "2026-04-29",
+        "event": "Notion AI upgraded to support multi-page reasoning — can now synthesise across an entire workspace to answer questions, not just the current page.",
+        "source": "https://notion.so/blog/ai-updates-april-2026"
+      },
+      {
+        "date": "2026-04-08",
+        "event": "Notion acquired Skiff's remaining IP assets (end-to-end encrypted docs) following Skiff's shutdown, suggesting a future privacy/encryption tier.",
+        "source": "https://techcrunch.com/2026/04/08/notion-skiff-ip"
+      },
+      {
+        "date": "2026-03-17",
+        "event": "Notion raised enterprise pricing by ~20% for new contracts, effective Q2 2026. Existing contracts grandfathered until renewal.",
+        "source": "https://reddit.com/r/Notion/comments/pricing2026"
+      }
+    ],
+    "sentiment": {
+      "score": 62,
+      "summary": "Sentiment is mixed-positive. Power users and teams love the flexibility and template depth. Core complaints centre on: slow load times on large databases, no true offline mode, and the feeling that AI features are 'add-ons' rather than transformative. Enterprise buyers cite unpredictable pricing and lack of SSO on lower tiers as friction. Reddit and HN skew critical (~40% negative threads) while G2/Capterra reviews lean positive (4.7/5 average). The recent price increase has generated visible backlash among SMB users."
+    },
+    "pricing": {
+      "summary": "Notion operates a freemium SaaS model with a meaningful free tier that drives top-of-funnel. Paid plans upgraded in Q2 2026 — most tiers increased ~20%. AI features require an add-on on Plus/Business; included in Enterprise.",
+      "tiers": [
+        "Free — unlimited pages for individuals, limited block history, max 10 guests",
+        "Plus — $12/user/month (was $10) — unlimited blocks, 30-day history, 100 guests",
+        "Business — $18/user/month (was $15) — SAML SSO, 90-day history, advanced permissions",
+        "Enterprise — custom pricing — audit logs, SCIM, dedicated CSM, unlimited history",
+        "Notion AI add-on — $10/user/month on Plus/Business; included in Enterprise"
+      ]
+    },
+    "techSignals": {
+      "summary": "Notion runs a TypeScript/React frontend with a Rust-based sync engine introduced in 2023 for performance. Backend is Go microservices on AWS. Recent engineering blog posts focus on: real-time collaboration at scale (CRDTs), their in-house vector search for AI features, and mobile performance. Actively hiring for AI/ML roles — 12 open JDs on Greenhouse as of May 2026, suggesting continued AI investment.",
+      "signals": [
+        "Rust sync engine (crdt-based) — shipping to 100% of users as of Q1 2026",
+        "In-house vector search engine replacing Pinecone for Notion AI semantic search",
+        "TypeScript monorepo — migrating to Turborepo for build performance",
+        "Actively hiring: AI Research Engineer, Staff ML Engineer, AI Product Lead (12 open roles)",
+        "Mobile rewrite underway — React Native → native Swift/Kotlin for iOS/Android",
+        "Edge caching layer added for Asia-Pacific (Singapore, Tokyo) — latency improvement focus"
+      ]
+    }
+  },
+  "spendLedger": [
+    {
+      "query": "Notion competitors alternatives 2026",
+      "category": "competitors",
+      "cost": 0.001,
+      "reason": "Mapping the competitive landscape is foundational — needed before any other category can be contextualised.",
+      "receipt": "0x4a7b2c9d1e3f5a8b6c0d2e4f7a1b3c5d7e9f0a2b4c6d8e0f2a4b6c8d0e2f4a6b"
+    },
+    {
+      "query": "Notion product launch announcement news last 30 days",
+      "category": "recentMoves",
+      "cost": 0.001,
+      "reason": "Recent moves reveal strategic direction and near-term threats — high signal-to-noise ratio for time-sensitive intelligence.",
+      "receipt": "0x9f3e1d7c5b2a8f4e0d6c3b1a9f7e5d2c0b8a6f4e2d0c8b6a4f2e0d8c6b4a2f0e8"
+    },
+    {
+      "query": "Notion user reviews complaints praise Reddit 2026",
+      "category": "sentiment",
+      "cost": 0.001,
+      "reason": "Customer sentiment uncovers product gaps and retention risks that official sources obscure — Reddit and review sites are the highest-fidelity signal.",
+      "receipt": "0x2b8f5c1e9a6d3f0b7e4c1a8f5d2b9e6c3a0f7d4b1e8c5a2f9d6b3e0c7a4f1d8b5"
+    },
+    {
+      "query": "Notion pricing plans cost tiers 2026",
+      "category": "pricing",
+      "cost": 0.001,
+      "reason": "Pricing intelligence is directly actionable for positioning and competitive displacement — worth buying even near budget cap.",
+      "receipt": "0x6c0e4a8f2d6b0e4a8f2d6b0e4a8f2d6b0e4a8f2d6b0e4a8f2d6b0e4a8f2d6b0e4"
+    },
+    {
+      "query": "Notion tech stack engineering blog infrastructure 2026",
+      "category": "techSignals",
+      "cost": 0.001,
+      "reason": "Tech signals reveal build vs buy decisions, scaling constraints, and where R&D investment is going — valuable for evaluating long-term capability trajectory.",
+      "receipt": "0xd4b2f0e8c6a4f2e0d8b6a4f2e0d8c6b4a2f0e8d6b4a2f0e8c6a4f2e0d8b6a4f2e0"
+    }
+  ],
+  "totalSpent": 0.005,
+  "remainingBudget": 4.995
+}
