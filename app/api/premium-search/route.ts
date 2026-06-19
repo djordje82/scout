@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+export const dynamic = 'force-dynamic'
 import { withX402, x402ResourceServer } from '@x402/next'
 import { HTTPFacilitatorClient } from '@x402/core/http'
 import { facilitator } from '@coinbase/x402'
