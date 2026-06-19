@@ -82,17 +82,17 @@ See task #27. Requires:
 - `#5` ✅ DONE — Pre-bake `data/mock_brief.json` demo fallback
 
 ### Stream B — Circle Agentic Commerce
-- `#27` — Circle CLI + Agent Skill host setup (prerequisite for #7, #8, #25)
-- `#6` — Build x402-gated premium search endpoint (`@x402/next`, v2)
-- `#7` — Integrate Circle Agent Wallet + Nanopayments (vendor circle-tools)
-- `#8` — End-to-end Circle Agent Wallet payment test (Base mainnet)
+- `#27` ✅ DONE — Circle CLI + Agent Skill host setup (CLI installed, logged in, wallet provisioned on Base mainnet — funding deferred)
+- `#6` ✅ DONE — Build x402-gated premium search endpoint (`@x402/next`, v2)
+- `#7` ✅ DONE — Integrate Circle Agent Wallet + Nanopayments (vendor circle-tools)
+- `#8` — End-to-end Circle Agent Wallet payment test (Base mainnet) — blocked on wallet funding
 - `#25` — Build Scout agent (Claude Agent SDK): 5 category tools, budget, spend ledger
 - `#26` — (Optional) List & discover service via Circle Agent Marketplace
 
 ### Stream C — Tavily + Nebius
-- `#9` — Integrate Tavily: competitive search queries (5 categories)
-- `#10` — Integrate Nebius Token Factory: competitive brief synthesis
-- `#11` — Build Scout orchestration API endpoint (`/app/api/scout`)
+- `#9` ✅ DONE — Integrate Tavily: competitive search queries (5 categories)
+- `#10` ✅ DONE — Integrate Nebius Token Factory: competitive brief synthesis
+- `#11` — Build Scout orchestration API endpoint (`/app/api/scout`) — blocked on #25
 
 ### Stream D — Frontend
 - `#12` ✅ DONE — Build Scout dashboard scaffold (company input, budget input, research button)

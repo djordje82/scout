@@ -1,6 +1,6 @@
 # Scout — Documentation & Progress Tracking
 
-_Last updated: 2026-06-19_
+_Last updated: 2026-06-20_
 
 ---
 
@@ -19,13 +19,18 @@ Scout is an autonomous competitive intelligence agent. The user enters a company
 | # | Task | Notes |
 |---|---|---|
 | 1 | Scaffold Next.js project | Next.js 16.2.9, TypeScript, Tailwind v4, Shadcn UI (button, card, badge, skeleton), lucide-react. `npm run dev` verified. |
-| 2 | Configure environment variables | `.env.example` created with all variables documented. `.env.local` created with `USE_MOCK=true`. `.gitignore` added (excludes node_modules, .next, .env.local). |
+| 2 | Configure environment variables | `.env.example` created with all variables documented. `.env.local` created with `USE_MOCK=true` + Tavily key. `.gitignore` added (excludes node_modules, .next, .env.local). |
 | 5 | Pre-bake `data/mock_brief.json` | Realistic Notion competitive brief — 5 competitors, 4 recent moves, sentiment score 62/100, pricing tiers, 6 tech signals, 5 spend ledger entries with mock Base tx hashes. |
-| 12 | Dashboard scaffold | `app/page.tsx` — dark UI, company input, focus input, budget slider (1–10 USDC), two-column results layout, prize track footer. |
+| 6 | x402-gated premium search endpoint | `app/api/premium-search/route.ts` — `withX402` wrapping POST handler, `ExactEvmScheme` on eip155:8453, 0.001 USDC/call, Coinbase facilitator. Packages: `@x402/next@2.16.0`, `@coinbase/x402@2.1.0`, `@x402/evm@2.16.0`. |
+| 7 | Circle Agent Wallet + Nanopayments | `lib/circle/` — 8 files vendored from ecosystem kit (`cli`, `types`, `chains`, `auth`, `wallet`, `gateway`, `services`, `browser`). `lib/circle/payment.ts` adds Scout-specific `payForService()`, `getWalletBalance()`, `getAgentWalletAddress()` with mock path. |
+| 9 | Tavily search module | `lib/tavily/search.ts` — `searchCategory({ company, category, focus? })` → `TavilyResult[]`. 5 query templates per category (quoted company name), `search_depth: 'advanced'`, `Authorization: Bearer`. Mock fallback with realistic results. |
+| 10 | Nebius synthesis module | `lib/nebius/synthesis.ts` — `synthesizeBrief(company, results, focus?)` → `{ brief: CompetitiveBriefData, model: string }`. OpenAI-compatible POST to Nebius Token Factory, model `Qwen/Qwen3-30B-A3B`, JSON-enforcing system prompt, temperature 0.2, max_tokens 2048. Mock returns `mockBrief.brief`. |
+| 12 | Dashboard scaffold | `app/page.tsx` — dark UI (`bg-[#0a0a0a]`), company input, focus input, budget slider (1–10 USDC), two-column results layout, prize track footer. |
 | 13 | Competitive brief display | `components/CompetitiveBrief.tsx` — 6 sections (overview, competitors grid, recent moves timeline, sentiment bar, pricing tiers, tech signal tags). Skeleton loaders + stagger fade-in animation on data arrival. |
 | 14 | Research queries panel | `components/ResearchQueries.tsx` — 5 entries with color-coded category badges, query text, "Powered by Tavily" attribution. Skeleton loader. |
 | 15 | Spend ledger panel | `components/SpendLedger.tsx` — per-entry category badge, cost (USDC), reason, receipt link to BaseScan. Running total + remaining budget bar. "Powered by Circle" badge. |
 | 16 | Start Research button + progress | Progress feed in `app/page.tsx` — 6 steps tick through at 750ms intervals during loading. Completed steps show ✓ in green, current step pulses in blue. Error state handled. |
+| 27 | Circle CLI host setup | Circle CLI installed globally, `circle terms accept`, email + OTP login, wallet provisioned on Base mainnet (`0xdf907eaaca1a7996ee248dd7f51dd240cba08ec9`). Funding deferred — USE_MOCK covers demo. |
 
 ### 🔲 Pending — Critical Path
 
@@ -33,22 +38,10 @@ These must all be green before submission. Order matters.
 
 | # | Task | Blocked by | Notes |
 |---|---|---|---|
-| 27 | Circle CLI host setup | — | Install `@circle-fin/cli` globally, login (email + OTP), create + fund agent wallet on Base mainnet. Creds stored in `~/.circle`. **This machine is the demo machine.** |
-| 6 | x402-gated premium search endpoint | 27 | `/app/api/premium-search/route.ts` using `@x402/next` v2. ~0.001 USDC per call. |
-| 7 | Circle Agent Wallet + Nanopayments | 6, 27 | Vendor `packages/circle-tools` from ecosystem kit into `/lib/circle`. Implement `payForService(url)` and `getWalletBalance()`. |
-| 25 | Scout agent (Claude Agent SDK) | 6, 7, 9, 10, 27 | Adapt `kits/claude-agent-sdk/src/{agent,tools,config}.ts`. 5 category tools, each paid via Circle wallet through x402 endpoint. Budget enforcement. Spend ledger. |
-| 8 | End-to-end Circle payment test | 7, 27 | Fund wallet → `getWalletBalance` → `payForService` → verify on BaseScan. |
-| 11 | Scout orchestration API (`/api/scout`) | 25 | Replace the mock-only route with the real agent. POST → ScoutResponse. Currently mock-only scaffold exists. |
-| 19 | Verify USE_MOCK demo path end-to-end | 5, 8, 11, 12–16 | Full checklist: npm run dev, enter "Notion", verify all panels, <10s, no console errors. |
-
-### 🔲 Pending — Stream C (Tavily + Nebius)
-
-Can be built in parallel with the Circle chain.
-
-| # | Task | Notes |
-|---|---|---|
-| 9 | Tavily search module | `/lib/tavily/search.ts` — `searchCategory({ company, category, focus? })` → `TavilyResult[]`. 5 query templates. Mock fallback. |
-| 10 | Nebius synthesis module | `/lib/nebius/synthesis.ts` — `synthesizeBrief({ company, results })` → `CompetitiveBrief`. Direct Token Factory API ("Fast" tier). Mock fallback. |
+| 25 | Scout agent (Claude Agent SDK) | 6, 7, 9, 10, 27 | Adapt `kits/claude-agent-sdk/src/{agent,tools,config}.ts`. 5 category tools, each paid via Circle wallet through x402 endpoint. Budget enforcement. Spend ledger accumulation. |
+| 8 | End-to-end Circle payment test | 7, 27 | Fund wallet → `getWalletBalance` → `payForService` → verify on BaseScan. Blocked on wallet funding decision. |
+| 11 | Scout orchestration API (`/api/scout`) | 25 | Replace mock-only route with real agent. POST → ScoutResponse. Mock-only scaffold already exists. |
+| 19 | Verify USE_MOCK demo path end-to-end | 5, 11, 12–16 | Full checklist: npm run dev, enter "Notion", verify all panels render, <10s, no console errors. |
 
 ### 🔲 Pending — Stream E (Pitch, Demo, Deploy)
 
@@ -81,11 +74,26 @@ Can be built in parallel with the Circle chain.
 
 ```
 .env.example                          — all env vars documented
-.env.local                            — USE_MOCK=true, secrets empty
+.env.local                            — USE_MOCK=true, TAVILY_API_KEY set (gitignored)
 .gitignore                            — excludes node_modules, .next, .env.local
 data/mock_brief.json                  — realistic Notion brief (demo fallback)
 lib/types.ts                          — shared TypeScript types (ScoutResponse, SpendEntry, etc.)
+lib/tavily/search.ts                  — searchCategory() with 5 templates, mock fallback
+lib/tavily/index.ts                   — re-exports searchCategory, buildQuery, TavilyResult
+lib/nebius/synthesis.ts               — synthesizeBrief() via Nebius Token Factory, mock fallback
+lib/nebius/index.ts                   — re-exports synthesizeBrief, SynthesisResult
+lib/circle/cli.ts                     — runCircle(), runCircleJson(), CircleCliError
+lib/circle/types.ts                   — AgentWallet, TokenBalance, PaymentResult, etc.
+lib/circle/chains.ts                  — Chain type, DEFAULT_CHAIN='BASE', helpers
+lib/circle/auth.ts                    — ensureSession(), sessionStatus(), logout()
+lib/circle/browser.ts                 — openInBrowser() for Transak URL
+lib/circle/wallet.ts                  — createWallet(), listWallets(), getBalance(), etc.
+lib/circle/gateway.ts                 — gatewayBalance(), gatewayDeposit()
+lib/circle/services.ts                — searchServices(), payService(), fetchService(), etc.
+lib/circle/payment.ts                 — payForService(), getWalletBalance(), getAgentWalletAddress()
+lib/circle/index.ts                   — re-exports all of the above
 app/api/scout/route.ts                — POST handler: returns mock data (5s delay) when USE_MOCK=true
+app/api/premium-search/route.ts       — withX402 POST handler, ExactEvmScheme eip155:8453, 0.001 USDC
 app/page.tsx                          — full dashboard UI
 app/layout.tsx                        — metadata updated, dark class added
 components/CompetitiveBrief.tsx       — 6-section brief with skeletons + stagger animation
@@ -105,22 +113,21 @@ components/SpendLedger.tsx            — spend entries, receipts, budget bar
 
 ### What is NOT wired yet
 
-- No real Tavily calls (lib/tavily/index.ts is a placeholder)
-- No real Nebius synthesis (lib/nebius/index.ts is a placeholder)
-- No Circle wallet or x402 payments (lib/circle/index.ts is a placeholder)
-- No Scout agent (lib/agent/index.ts is a placeholder)
-- `/api/scout` returns hardcoded mock — real agent invocation comes in #11
+- No Scout agent (`lib/agent/` is still a placeholder) — task #25
+- `/api/scout` returns hardcoded mock — real agent invocation comes in #11 (needs #25 first)
+- Circle wallet is provisioned but unfunded — live payments deferred, USE_MOCK covers demo
+- Nebius API key not yet set in `.env.local` — waiting on promo code
+- OOBE, ERC-8004, MCP not started
 
 ---
 
 ## Critical Path Reminder
 
 ```
-#27 (Circle CLI) → #6 (x402 endpoint) → #7 (Circle wallet) → #25 (Scout agent) → #11 (real /api/scout) → #19 (demo verify)
+#25 (Scout agent) → #11 (real /api/scout) → #19 (demo verify)
 ```
 
-Start #9 (Tavily) and #10 (Nebius) in parallel — both unblocked.
+Prerequisites already done: #27 (Circle CLI), #6 (x402 endpoint), #7 (Circle tools), #9 (Tavily), #10 (Nebius).
 
 **Ecosystem kit location:** `~/Downloads/agent-stack-ecosystem-kits-main`
-- Vendor: `packages/circle-tools/src/` → `/lib/circle/`
 - Adapt: `kits/claude-agent-sdk/src/{agent,tools,config}.ts` → `/lib/agent/`

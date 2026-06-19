@@ -10,6 +10,9 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
+    "@coinbase/x402": "^2.1.0",
+    "@x402/evm": "^2.16.0",
+    "@x402/next": "^2.16.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.21.0",
