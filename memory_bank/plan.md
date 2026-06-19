@@ -76,10 +76,10 @@ See task #27. Requires:
 
 ### Setup
 - `#1` ✅ DONE — Scaffold Next.js project (Next 16 + TypeScript + Tailwind v4 + Shadcn)
-- `#2` — Configure environment variables
+- `#2` ✅ DONE — Configure environment variables
 
 ### Stream A — Scout Agent Core
-- `#5` — Pre-bake `data/mock_brief.json` demo fallback
+- `#5` ✅ DONE — Pre-bake `data/mock_brief.json` demo fallback
 
 ### Stream B — Circle Agentic Commerce
 - `#27` — Circle CLI + Agent Skill host setup (prerequisite for #7, #8, #25)
@@ -95,11 +95,11 @@ See task #27. Requires:
 - `#11` — Build Scout orchestration API endpoint (`/app/api/scout`)
 
 ### Stream D — Frontend
-- `#12` — Build Scout dashboard scaffold (company input, budget input, research button)
-- `#13` — Build competitive brief display (6 sections: overview, competitors, moves, sentiment, pricing, tech)
-- `#14` — Build research queries panel (what agent searched + cost per query)
-- `#15` — Build spend ledger panel (line items: query, category, cost, reason, receipt)
-- `#16` — Build "Start Research" button + progress animation + budget display
+- `#12` ✅ DONE — Build Scout dashboard scaffold (company input, budget input, research button)
+- `#13` ✅ DONE — Build competitive brief display (6 sections: overview, competitors, moves, sentiment, pricing, tech)
+- `#14` ✅ DONE — Build research queries panel (what agent searched + cost per query)
+- `#15` ✅ DONE — Build spend ledger panel (line items: query, category, cost, reason, receipt)
+- `#16` ✅ DONE — Build "Start Research" button + progress animation + budget display
 
 ### Stream E — Pitch, Demo & Deploy
 - `#17` — Write README with prize track documentation
