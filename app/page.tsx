@@ -7,8 +7,9 @@ import { CompetitiveBrief } from '@/components/CompetitiveBrief'
 import { ResearchQueries } from '@/components/ResearchQueries'
 import { SpendLedger } from '@/components/SpendLedger'
 import { cn } from '@/lib/utils'
-import { Target } from 'lucide-react'
+import { Target, Download } from 'lucide-react'
 import type { ScoutResponse } from '@/lib/types'
+import { exportJson, exportMarkdown, exportPdf } from '@/lib/export'
 
 const FOCUS_PRESETS = [
   { value: '',                              label: 'General competitive overview' },
@@ -257,6 +258,37 @@ export default function Home() {
                 result={result}
                 isLoading={status === 'loading'}
               />
+            </div>
+          </div>
+        )}
+
+        {/* Export bar */}
+        {status === 'done' && result && (
+          <div className="rounded-xl border border-neutral-800 bg-neutral-950 px-5 py-4 mb-8 flex flex-col sm:flex-row sm:items-center gap-4">
+            <div className="flex items-center gap-2.5 shrink-0">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#3b82f6]/10 border border-[#3b82f6]/20">
+                <Download className="h-4 w-4 text-[#3b82f6]" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-white">Export report</p>
+                <p className="text-[11px] text-neutral-500">Download for humans or AI ingestion</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 sm:ml-auto flex-wrap">
+              {([
+                { label: 'JSON',     desc: 'AI / API',  action: () => exportJson(result)     },
+                { label: 'Markdown', desc: 'LLM-ready', action: () => exportMarkdown(result) },
+                { label: 'PDF',      desc: 'Human',     action: () => exportPdf(result)      },
+              ] as const).map(({ label, desc, action }) => (
+                <button
+                  key={label}
+                  onClick={action}
+                  className="flex items-center gap-2 rounded-lg border border-neutral-700 bg-neutral-900 px-4 py-2 text-sm text-white hover:border-[#3b82f6] hover:bg-[#3b82f6]/10 hover:text-[#3b82f6] transition-colors"
+                >
+                  <span className="font-medium">{label}</span>
+                  <span className="text-[10px] text-neutral-500">{desc}</span>
+                </button>
+              ))}
             </div>
           </div>
         )}
