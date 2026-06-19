@@ -66,6 +66,7 @@ export async function runScout({
 
     if (process.env.USE_MOCK === 'true') {
       results = await searchCategory({ company, category, focus })
+      await delay(700)
       spendLedger.push({
         query,
         category,
@@ -89,6 +90,8 @@ export async function runScout({
     totalSpent = Math.round((totalSpent + COST_PER_SEARCH) * 1000) / 1000
   }
 
+  if (process.env.USE_MOCK === 'true') await delay(1000)
+
   const { brief } = await synthesizeBrief(company, categoryResults, focus)
 
   return {
@@ -100,6 +103,10 @@ export async function runScout({
     totalSpent,
     remainingBudget: Math.round((budgetUSDC - totalSpent) * 1000) / 1000,
   }
+}
+
+function delay(ms: number): Promise<void> {
+  return new Promise(r => setTimeout(r, ms))
 }
 
 function fakeReceipt(): string {
