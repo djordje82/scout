@@ -10,6 +10,16 @@ import { cn } from '@/lib/utils'
 import { Target } from 'lucide-react'
 import type { ScoutResponse } from '@/lib/types'
 
+const FOCUS_PRESETS = [
+  { value: '',                              label: 'General competitive overview' },
+  { value: 'enterprise pricing strategy',   label: 'Enterprise pricing strategy'  },
+  { value: 'AI and product roadmap',        label: 'AI and product roadmap'       },
+  { value: 'go-to-market positioning',      label: 'Go-to-market positioning'     },
+  { value: 'engineering and tech stack',    label: 'Engineering and tech stack'   },
+  { value: 'customer sentiment and reviews',label: 'Customer sentiment and reviews'},
+  { value: 'funding and growth trajectory', label: 'Funding and growth trajectory'},
+]
+
 const STEPS = [
   { label: 'Searching competitors',          cost: 0.001 },
   { label: 'Searching recent moves',         cost: 0.001 },
@@ -29,9 +39,10 @@ const PRIZE_TRACKS = [
 type Status = 'idle' | 'loading' | 'done' | 'error'
 
 export default function Home() {
-  const [company, setCompany]       = useState('')
-  const [focus, setFocus]           = useState('')
-  const [budget, setBudget]         = useState(5)
+  const [company, setCompany]         = useState('')
+  const [focusPreset, setFocusPreset] = useState('')
+  const [focusCustom, setFocusCustom] = useState('')
+  const [budget, setBudget]           = useState(5)
   const [status, setStatus]         = useState<Status>('idle')
   const [result, setResult]         = useState<ScoutResponse | null>(null)
   const [error, setError]           = useState<string | null>(null)
@@ -76,7 +87,11 @@ export default function Home() {
       const res = await fetch('/api/scout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ company: company.trim(), focus: focus.trim(), budgetUSDC: budget }),
+        body: JSON.stringify({
+          company: company.trim(),
+          focus: (focusPreset === 'other' ? focusCustom : focusPreset).trim() || undefined,
+          budgetUSDC: budget,
+        }),
       })
 
       if (!res.ok) {
@@ -131,14 +146,28 @@ export default function Home() {
                 <label className="block text-xs font-medium text-neutral-400 mb-1.5">
                   Focus <span className="text-neutral-600">(optional)</span>
                 </label>
-                <input
-                  type="text"
-                  value={focus}
-                  onChange={e => setFocus(e.target.value)}
-                  placeholder="e.g. enterprise pricing strategy"
+                <select
+                  value={focusPreset}
+                  onChange={e => { setFocusPreset(e.target.value); setFocusCustom('') }}
                   disabled={status === 'loading'}
-                  className="w-full rounded-lg border border-neutral-800 bg-neutral-900 px-3.5 py-2.5 text-sm text-white placeholder:text-neutral-600 focus:border-[#3b82f6] focus:outline-none focus:ring-1 focus:ring-[#3b82f6] disabled:opacity-50"
-                />
+                  className="w-full rounded-lg border border-neutral-800 bg-neutral-900 px-3.5 py-2.5 text-sm text-white focus:border-[#3b82f6] focus:outline-none focus:ring-1 focus:ring-[#3b82f6] disabled:opacity-50"
+                >
+                  {FOCUS_PRESETS.map(p => (
+                    <option key={p.value} value={p.value}>{p.label}</option>
+                  ))}
+                  <option value="other">Other (type your own)</option>
+                </select>
+                {focusPreset === 'other' && (
+                  <input
+                    type="text"
+                    value={focusCustom}
+                    onChange={e => setFocusCustom(e.target.value)}
+                    placeholder="e.g. APAC expansion strategy"
+                    disabled={status === 'loading'}
+                    autoFocus
+                    className="mt-2 w-full rounded-lg border border-neutral-800 bg-neutral-900 px-3.5 py-2.5 text-sm text-white placeholder:text-neutral-600 focus:border-[#3b82f6] focus:outline-none focus:ring-1 focus:ring-[#3b82f6] disabled:opacity-50"
+                  />
+                )}
               </div>
             </div>
 

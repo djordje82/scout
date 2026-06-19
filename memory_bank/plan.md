@@ -86,13 +86,13 @@ See task #27. Requires:
 - `#6` ✅ DONE — Build x402-gated premium search endpoint (`@x402/next`, v2)
 - `#7` ✅ DONE — Integrate Circle Agent Wallet + Nanopayments (vendor circle-tools)
 - `#8` — End-to-end Circle Agent Wallet payment test (Base mainnet) — blocked on wallet funding
-- `#25` — Build Scout agent (Claude Agent SDK): 5 category tools, budget, spend ledger
+- `#25` ✅ DONE — Build Scout agent: runScout() in lib/agent/index.ts, 5-category loop, budget cap, per-step mock delays (700ms/search + 1000ms synthesis), fake receipts in mock mode
 - `#26` — (Optional) List & discover service via Circle Agent Marketplace
 
 ### Stream C — Tavily + Nebius
 - `#9` ✅ DONE — Integrate Tavily: competitive search queries (5 categories)
 - `#10` ✅ DONE — Integrate Nebius Token Factory: competitive brief synthesis
-- `#11` — Build Scout orchestration API endpoint (`/app/api/scout`) — blocked on #25
+- `#11` ✅ DONE — Build Scout orchestration API endpoint (`/app/api/scout`) — delegates to runScout(), replaced mock-only stub
 
 ### Stream D — Frontend
 - `#12` ✅ DONE — Build Scout dashboard scaffold (company input, budget input, research button)
@@ -104,7 +104,7 @@ See task #27. Requires:
 ### Stream E — Pitch, Demo & Deploy
 - `#17` — Write README with prize track documentation
 - `#18` — Create pitch deck (4 slides)
-- `#19` — Verify USE_MOCK demo path end-to-end
+- `#19` ✅ DONE — Verify USE_MOCK demo path end-to-end: 8/8 checklist items pass, 4.54s response, UI confirmed working
 - `#20` — Record video walkthrough
 - `#21` — Deploy to Vercel (USE_MOCK=true public instance)
 

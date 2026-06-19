@@ -1,6 +1,6 @@
 # Scout — Documentation & Progress Tracking
 
-_Last updated: 2026-06-20_
+_Last updated: 2026-06-20 (evening)_
 
 ---
 
@@ -32,16 +32,19 @@ Scout is an autonomous competitive intelligence agent. The user enters a company
 | 16 | Start Research button + progress | Progress feed in `app/page.tsx` — 6 steps tick through at 750ms intervals during loading. Completed steps show ✓ in green, current step pulses in blue. Error state handled. |
 | 27 | Circle CLI host setup | Circle CLI installed globally, `circle terms accept`, email + OTP login, wallet provisioned on Base mainnet (`0xdf907eaaca1a7996ee248dd7f51dd240cba08ec9`). Funding deferred — USE_MOCK covers demo. |
 
-### 🔲 Pending — Critical Path
+### ✅ Critical Path — All Done
 
-These must all be green before submission. Order matters.
+| # | Task | Notes |
+|---|---|---|
+| 25 | Scout agent | `lib/agent/index.ts` — `runScout()` loops 5 categories, budget cap, 700ms/search + 1000ms synthesis delay in mock, fake receipts. |
+| 11 | Scout orchestration API | `app/api/scout/route.ts` delegates to `runScout()`. Replaced mock-only stub. |
+| 19 | USE_MOCK demo verified | 8/8 checklist items pass. 4.54s response synced to 4.5s progress animation. UI confirmed working. |
+
+### 🔲 Pending — One Remaining Blocker
 
 | # | Task | Blocked by | Notes |
 |---|---|---|---|
-| 25 | Scout agent (Claude Agent SDK) | 6, 7, 9, 10, 27 | Adapt `kits/claude-agent-sdk/src/{agent,tools,config}.ts`. 5 category tools, each paid via Circle wallet through x402 endpoint. Budget enforcement. Spend ledger accumulation. |
-| 8 | End-to-end Circle payment test | 7, 27 | Fund wallet → `getWalletBalance` → `payForService` → verify on BaseScan. Blocked on wallet funding decision. |
-| 11 | Scout orchestration API (`/api/scout`) | 25 | Replace mock-only route with real agent. POST → ScoutResponse. Mock-only scaffold already exists. |
-| 19 | Verify USE_MOCK demo path end-to-end | 5, 11, 12–16 | Full checklist: npm run dev, enter "Notion", verify all panels render, <10s, no console errors. |
+| 8 | End-to-end Circle payment test | wallet funding | Fund wallet → `getWalletBalance` → `payForService` → verify on BaseScan. Deferred — USE_MOCK covers demo. |
 
 ### 🔲 Pending — Stream E (Pitch, Demo, Deploy)
 
@@ -92,7 +95,8 @@ lib/circle/gateway.ts                 — gatewayBalance(), gatewayDeposit()
 lib/circle/services.ts                — searchServices(), payService(), fetchService(), etc.
 lib/circle/payment.ts                 — payForService(), getWalletBalance(), getAgentWalletAddress()
 lib/circle/index.ts                   — re-exports all of the above
-app/api/scout/route.ts                — POST handler: returns mock data (5s delay) when USE_MOCK=true
+lib/agent/index.ts                    — runScout(): 5-category loop, budget cap, mock delays, spend ledger
+app/api/scout/route.ts                — POST handler delegates to runScout()
 app/api/premium-search/route.ts       — withX402 POST handler, ExactEvmScheme eip155:8453, 0.001 USDC
 app/page.tsx                          — full dashboard UI
 app/layout.tsx                        — metadata updated, dark class added
@@ -113,21 +117,22 @@ components/SpendLedger.tsx            — spend entries, receipts, budget bar
 
 ### What is NOT wired yet
 
-- No Scout agent (`lib/agent/` is still a placeholder) — task #25
-- `/api/scout` returns hardcoded mock — real agent invocation comes in #11 (needs #25 first)
-- Circle wallet is provisioned but unfunded — live payments deferred, USE_MOCK covers demo
+- Circle wallet unfunded — live x402 payments deferred, USE_MOCK covers demo (#8)
 - Nebius API key not yet set in `.env.local` — waiting on promo code
-- OOBE, ERC-8004, MCP not started
+- OOBE, ERC-8004, MCP not started (#22, #23, #24)
+- README, pitch deck, video, Vercel deploy not done (#17, #18, #20, #21)
 
 ---
 
-## Critical Path Reminder
+## What's Left Before Submission
 
-```
-#25 (Scout agent) → #11 (real /api/scout) → #19 (demo verify)
-```
-
-Prerequisites already done: #27 (Circle CLI), #6 (x402 endpoint), #7 (Circle tools), #9 (Tavily), #10 (Nebius).
-
-**Ecosystem kit location:** `~/Downloads/agent-stack-ecosystem-kits-main`
-- Adapt: `kits/claude-agent-sdk/src/{agent,tools,config}.ts` → `/lib/agent/`
+| Priority | Task | Notes |
+|---|---|---|
+| High | #17 README | Prize eligibility, setup, env vars |
+| High | #21 Vercel deploy | USE_MOCK=true public instance |
+| High | #20 Video walkthrough | ~60s screen capture |
+| Medium | #18 Pitch deck | 4 slides, PDF |
+| Low | #22 OOBE Synapse RPC | Extra prize track |
+| Low | #23 ERC-8004 agent identity | Extra prize track |
+| Low | #24 MCP endpoint | Extra prize track |
+| Stretch | #8 Live Circle payment | Needs wallet funding |
