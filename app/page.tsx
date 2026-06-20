@@ -1,317 +1,246 @@
-'use client'
+import Link from 'next/link'
+import { Target, Search, Brain, Wallet, ArrowRight, CheckCircle2 } from 'lucide-react'
 
-import { useState, useEffect, useRef } from 'react'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { CompetitiveBrief } from '@/components/CompetitiveBrief'
-import { ResearchQueries } from '@/components/ResearchQueries'
-import { SpendLedger } from '@/components/SpendLedger'
-import { cn } from '@/lib/utils'
-import { Target, Download } from 'lucide-react'
-import type { ScoutResponse } from '@/lib/types'
-import { exportJson, exportMarkdown, exportPdf } from '@/lib/export'
-
-const FOCUS_PRESETS = [
-  { value: '',                              label: 'General competitive overview' },
-  { value: 'enterprise pricing strategy',   label: 'Enterprise pricing strategy'  },
-  { value: 'AI and product roadmap',        label: 'AI and product roadmap'       },
-  { value: 'go-to-market positioning',      label: 'Go-to-market positioning'     },
-  { value: 'engineering and tech stack',    label: 'Engineering and tech stack'   },
-  { value: 'customer sentiment and reviews',label: 'Customer sentiment and reviews'},
-  { value: 'funding and growth trajectory', label: 'Funding and growth trajectory'},
+const HOW_IT_WORKS = [
+  {
+    step: '01',
+    icon: Target,
+    title: 'Name your target',
+    desc: 'Enter a company and optional research focus. Set a USDC budget — Scout never spends more than you authorise.',
+  },
+  {
+    step: '02',
+    icon: Wallet,
+    title: 'Agent buys intelligence',
+    desc: 'Scout\'s Circle Agent Wallet pays $0.001 USDC per query via x402 nanopayments — one purchase per research category.',
+  },
+  {
+    step: '03',
+    icon: Search,
+    title: 'Tavily searches five angles',
+    desc: 'Competitors, recent moves, customer sentiment, pricing, and tech signals — each a paid, targeted Tavily search.',
+  },
+  {
+    step: '04',
+    icon: Brain,
+    title: 'Nebius synthesises a brief',
+    desc: 'Qwen3-30B reads all five result sets and returns a structured JSON competitive brief ready for humans or downstream AI.',
+  },
 ]
 
-const STEPS = [
-  { label: 'Searching competitors',          cost: 0.001 },
-  { label: 'Searching recent moves',         cost: 0.001 },
-  { label: 'Searching customer sentiment',   cost: 0.001 },
-  { label: 'Searching pricing intelligence', cost: 0.001 },
-  { label: 'Searching tech signals',         cost: 0.001 },
-  { label: 'Synthesizing brief with Nebius', cost: 0     },
+const FEATURES = [
+  'Five research categories per session',
+  'Hard budget cap — never overspends',
+  'On-chain receipt for every search',
+  'Structured JSON + Markdown + PDF export',
+  'Works in mock mode — no wallet required',
 ]
 
-const PRIZE_TRACKS = [
-  { name: 'Circle',  desc: 'Agent Wallet + Nanopayments' },
-  { name: 'Tavily',  desc: 'Agentic Search'              },
-  { name: 'Nebius',  desc: 'Token Factory'               },
-  { name: 'OOBE',    desc: 'Agent Infra'                 },
+const STACK = [
+  { name: 'Circle', role: 'Agent Wallet + x402 nanopayments', color: 'text-green-400 border-green-400/20 bg-green-400/5' },
+  { name: 'Tavily', role: 'Agentic search', color: 'text-blue-400 border-blue-400/20 bg-blue-400/5' },
+  { name: 'Nebius', role: 'Token Factory LLM', color: 'text-purple-400 border-purple-400/20 bg-purple-400/5' },
+  { name: 'x402',   role: 'HTTP nanopayments', color: 'text-orange-400 border-orange-400/20 bg-orange-400/5' },
 ]
 
-type Status = 'idle' | 'loading' | 'done' | 'error'
-
-export default function Home() {
-  const [company, setCompany]         = useState('')
-  const [focusPreset, setFocusPreset] = useState('')
-  const [focusCustom, setFocusCustom] = useState('')
-  const [budget, setBudget]           = useState(5)
-  const [status, setStatus]         = useState<Status>('idle')
-  const [result, setResult]         = useState<ScoutResponse | null>(null)
-  const [error, setError]           = useState<string | null>(null)
-  const [currentStep, setCurrentStep] = useState(-1)
-
-  const resultsRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (status !== 'loading') {
-      const timer = setTimeout(() => setCurrentStep(-1), 0)
-      return () => clearTimeout(timer)
-    }
-
-    const timer = setTimeout(() => setCurrentStep(0), 0)
-    let step = 0
-    const id = setInterval(() => {
-      step++
-      if (step < STEPS.length) {
-        setCurrentStep(step)
-      } else {
-        clearInterval(id)
-      }
-    }, 750)
-
-    return () => {
-      clearTimeout(timer)
-      clearInterval(id)
-    }
-  }, [status])
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!company.trim() || status === 'loading') return
-
-    setStatus('loading')
-    setResult(null)
-    setError(null)
-
-    setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100)
-
-    try {
-      const res = await fetch('/api/scout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          company: company.trim(),
-          focus: (focusPreset === 'other' ? focusCustom : focusPreset).trim() || undefined,
-          budgetUSDC: budget,
-        }),
-      })
-
-      if (!res.ok) {
-        const err = await res.json() as { error?: string }
-        throw new Error(err.error ?? 'Research failed')
-      }
-
-      const data = await res.json() as ScoutResponse
-      setResult(data)
-      setStatus('done')
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong')
-      setStatus('error')
-    }
-  }
-
-  const showResults = status === 'loading' || status === 'done'
-
+export default function Landing() {
   return (
     <main className="min-h-screen bg-[#0a0a0a] text-white">
-      <div className="mx-auto max-w-7xl px-6 py-10">
 
-        {/* Header */}
-        <header className="mb-8">
-          <div className="flex items-center gap-2 mb-1">
-            <Target className="h-5 w-5 text-[#3b82f6]" />
-            <h1 className="text-xl font-bold tracking-tight">Scout</h1>
+      {/* Nav */}
+      <nav className="border-b border-neutral-900 px-6 py-4">
+        <div className="mx-auto max-w-6xl flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Target className="h-5 w-5 text-[#eab308]" />
+            <span className="font-bold tracking-tight">Scout</span>
           </div>
-          <p className="text-sm text-neutral-500">
-            Autonomous competitive intelligence — powered by Circle, Tavily, and Nebius
+          <Link
+            href="/research"
+            className="flex items-center gap-1.5 rounded-lg bg-[#eab308] px-4 py-2 text-sm font-medium text-black hover:bg-[#ca8a04] transition-colors"
+          >
+            Launch app <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+      </nav>
+
+      <div className="mx-auto max-w-6xl px-6">
+
+        {/* Hero */}
+        <section className="py-24 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full border border-neutral-800 bg-neutral-900 px-3 py-1.5 text-xs text-neutral-400 mb-8">
+            <span className="h-1.5 w-1.5 rounded-full bg-green-400 animate-pulse" />
+            Autonomous agent · pays per insight · on-chain receipts
+          </div>
+
+          <h1 className="text-5xl sm:text-6xl font-bold tracking-tight leading-tight mb-6">
+            Competitive intelligence
+            <br />
+            <span className="text-[#eab308]">paid per insight</span>
+          </h1>
+
+          <p className="text-lg text-neutral-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+            Scout is an autonomous AI agent. Give it a company name and a USDC budget.
+            It researches five angles, pays for each search individually, and returns
+            a structured brief with on-chain receipts — no subscriptions, no overage.
           </p>
-        </header>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="mb-10">
-          <div className="flex flex-col gap-4 max-w-3xl">
-            <div className="flex gap-3">
-              <div className="flex-1">
-                <label className="block text-xs font-medium text-neutral-400 mb-1.5">
-                  Company
-                </label>
-                <input
-                  type="text"
-                  value={company}
-                  onChange={e => setCompany(e.target.value)}
-                  placeholder="e.g. Notion, Linear, Figma"
-                  disabled={status === 'loading'}
-                  className="w-full rounded-lg border border-neutral-800 bg-neutral-900 px-3.5 py-2.5 text-sm text-white placeholder:text-neutral-600 focus:border-[#3b82f6] focus:outline-none focus:ring-1 focus:ring-[#3b82f6] disabled:opacity-50"
-                />
-              </div>
-              <div className="flex-1">
-                <label className="block text-xs font-medium text-neutral-400 mb-1.5">
-                  Focus <span className="text-neutral-600">(optional)</span>
-                </label>
-                <select
-                  value={focusPreset}
-                  onChange={e => { setFocusPreset(e.target.value); setFocusCustom('') }}
-                  disabled={status === 'loading'}
-                  className="w-full rounded-lg border border-neutral-800 bg-neutral-900 px-3.5 py-2.5 text-sm text-white focus:border-[#3b82f6] focus:outline-none focus:ring-1 focus:ring-[#3b82f6] disabled:opacity-50"
-                >
-                  {FOCUS_PRESETS.map(p => (
-                    <option key={p.value} value={p.value}>{p.label}</option>
-                  ))}
-                  <option value="other">Other (type your own)</option>
-                </select>
-                {focusPreset === 'other' && (
-                  <input
-                    type="text"
-                    value={focusCustom}
-                    onChange={e => setFocusCustom(e.target.value)}
-                    placeholder="e.g. APAC expansion strategy"
-                    disabled={status === 'loading'}
-                    autoFocus
-                    className="mt-2 w-full rounded-lg border border-neutral-800 bg-neutral-900 px-3.5 py-2.5 text-sm text-white placeholder:text-neutral-600 focus:border-[#3b82f6] focus:outline-none focus:ring-1 focus:ring-[#3b82f6] disabled:opacity-50"
-                  />
-                )}
-              </div>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link
+              href="/research"
+              className="flex items-center gap-2 rounded-xl bg-[#eab308] px-7 py-3.5 text-base font-semibold text-black hover:bg-[#ca8a04] transition-colors"
+            >
+              Start researching <ArrowRight className="h-4 w-4" />
+            </Link>
+            <span className="text-sm text-neutral-600">
+              Try mock mode — no wallet or API keys needed
+            </span>
+          </div>
+        </section>
+
+        {/* Cost callout */}
+        <section className="mb-20">
+          <div className="rounded-2xl border border-neutral-800 bg-neutral-950 p-8 grid grid-cols-3 divide-x divide-neutral-800 text-center">
+            <div className="px-4">
+              <p className="text-3xl font-bold text-white mb-1">$0.001</p>
+              <p className="text-sm text-neutral-500">per search query</p>
             </div>
+            <div className="px-4">
+              <p className="text-3xl font-bold text-white mb-1">5</p>
+              <p className="text-sm text-neutral-500">research categories</p>
+            </div>
+            <div className="px-4">
+              <p className="text-3xl font-bold text-white mb-1">$0.005</p>
+              <p className="text-sm text-neutral-500">full brief, total cost</p>
+            </div>
+          </div>
+        </section>
 
-            <div className="flex items-end gap-4">
-              <div className="flex-1">
-                <label className="block text-xs font-medium text-neutral-400 mb-1.5">
-                  Budget —{' '}
-                  <span className="font-mono text-white">${budget.toFixed(1)} USDC</span>
-                </label>
-                <input
-                  type="range"
-                  min={1}
-                  max={10}
-                  step={0.5}
-                  value={budget}
-                  onChange={e => setBudget(Number(e.target.value))}
-                  disabled={status === 'loading'}
-                  className="w-full accent-[#3b82f6] disabled:opacity-50 cursor-pointer"
-                />
-                <div className="flex justify-between text-xs text-neutral-700 mt-0.5">
-                  <span>$1</span>
-                  <span>$10</span>
-                </div>
-              </div>
+        {/* How it works */}
+        <section className="mb-20">
+          <h2 className="text-2xl font-bold mb-2">How it works</h2>
+          <p className="text-neutral-500 text-sm mb-10">Four steps. Fully automated. Every cent accounted for.</p>
 
-              <Button
-                type="submit"
-                disabled={!company.trim() || status === 'loading'}
-                className="h-10 px-6 bg-[#3b82f6] hover:bg-[#2563eb] text-white shrink-0 mb-5 disabled:opacity-40"
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {HOW_IT_WORKS.map(({ step, icon: Icon, title, desc }) => (
+              <div
+                key={step}
+                className="rounded-xl border border-neutral-800 bg-neutral-950 p-6 hover:border-neutral-700 transition-colors"
               >
-                {status === 'loading' ? 'Researching…' : 'Start Research'}
-              </Button>
-            </div>
-
-            {/* Progress feed */}
-            {status === 'loading' && (
-              <div className="rounded-lg border border-neutral-800 bg-neutral-950 p-3 font-mono text-xs space-y-1.5">
-                {STEPS.map((step, i) => (
-                  <div
-                    key={i}
-                    className={cn(
-                      'flex items-center gap-2 transition-colors duration-300',
-                      i < currentStep  ? 'text-green-400'  :
-                      i === currentStep ? 'text-[#3b82f6]' :
-                      'text-neutral-700'
-                    )}
-                  >
-                    <span className="w-3 shrink-0 text-center select-none">
-                      {i < currentStep ? '✓' : i === currentStep ? '›' : '·'}
-                    </span>
-                    <span>
-                      {step.label}
-                      {i < currentStep && step.cost > 0 && (
-                        <span className="text-neutral-600 ml-1">({step.cost} USDC paid)</span>
-                      )}
-                      {i === currentStep && <span className="animate-pulse">…</span>}
-                    </span>
+                <div className="flex items-start gap-4">
+                  <div className="shrink-0 flex items-center justify-center h-10 w-10 rounded-lg bg-[#eab308]/10 border border-[#eab308]/20">
+                    <Icon className="h-5 w-5 text-[#eab308]" />
                   </div>
-                ))}
-              </div>
-            )}
-
-            {status === 'error' && error && (
-              <div className="rounded-lg border border-red-900 bg-red-950/30 p-3 text-sm text-red-400">
-                {error}
-              </div>
-            )}
-          </div>
-        </form>
-
-        {/* Results */}
-        {showResults && (
-          <div ref={resultsRef} className="grid grid-cols-5 gap-6 mb-12">
-            <div className="col-span-3">
-              <CompetitiveBrief
-                company={result?.company ?? company}
-                brief={result?.brief ?? null}
-                isLoading={status === 'loading'}
-              />
-            </div>
-            <div className="col-span-2 flex flex-col gap-4">
-              <ResearchQueries
-                spendLedger={result?.spendLedger ?? null}
-                isLoading={status === 'loading'}
-              />
-              <SpendLedger
-                result={result}
-                isLoading={status === 'loading'}
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Export bar */}
-        {status === 'done' && result && (
-          <div className="rounded-xl border border-neutral-800 bg-neutral-950 px-5 py-4 mb-8 flex flex-col sm:flex-row sm:items-center gap-4">
-            <div className="flex items-center gap-2.5 shrink-0">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#3b82f6]/10 border border-[#3b82f6]/20">
-                <Download className="h-4 w-4 text-[#3b82f6]" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-white">Export report</p>
-                <p className="text-[11px] text-neutral-500">Download for humans or AI ingestion</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 sm:ml-auto flex-wrap">
-              {([
-                { label: 'JSON',     desc: 'AI / API',  action: () => exportJson(result)     },
-                { label: 'Markdown', desc: 'LLM-ready', action: () => exportMarkdown(result) },
-                { label: 'PDF',      desc: 'Human',     action: () => exportPdf(result)      },
-              ] as const).map(({ label, desc, action }) => (
-                <button
-                  key={label}
-                  onClick={action}
-                  className="flex items-center gap-2 rounded-lg border border-neutral-700 bg-neutral-900 px-4 py-2 text-sm text-white hover:border-[#3b82f6] hover:bg-[#3b82f6]/10 hover:text-[#3b82f6] transition-colors"
-                >
-                  <span className="font-medium">{label}</span>
-                  <span className="text-[10px] text-neutral-500">{desc}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Footer */}
-        <footer className="border-t border-neutral-900 pt-6">
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-            <span className="text-xs text-neutral-700">Prize tracks:</span>
-            {PRIZE_TRACKS.map(track => (
-              <div key={track.name} className="flex items-center gap-1.5">
-                <Badge
-                  variant="secondary"
-                  className="bg-neutral-900 text-neutral-400 border border-neutral-800 text-[10px] px-2 py-0.5"
-                >
-                  {track.name}
-                </Badge>
-                <span className="text-[11px] text-neutral-600">{track.desc}</span>
+                  <div>
+                    <div className="flex items-baseline gap-2 mb-1">
+                      <span className="text-[10px] font-mono text-neutral-600">{step}</span>
+                      <h3 className="text-sm font-semibold text-white">{title}</h3>
+                    </div>
+                    <p className="text-sm text-neutral-500 leading-relaxed">{desc}</p>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
-        </footer>
+        </section>
+
+        {/* Spend ledger preview */}
+        <section className="mb-20">
+          <h2 className="text-2xl font-bold mb-2">Every cent is on-chain</h2>
+          <p className="text-neutral-500 text-sm mb-8">Scout returns a spend ledger with a Base transaction receipt for each search.</p>
+
+          <div className="rounded-xl border border-neutral-800 bg-neutral-950 overflow-hidden font-mono text-xs">
+            <div className="border-b border-neutral-800 px-4 py-2 flex items-center gap-2">
+              <div className="h-2.5 w-2.5 rounded-full bg-red-500/60" />
+              <div className="h-2.5 w-2.5 rounded-full bg-yellow-500/60" />
+              <div className="h-2.5 w-2.5 rounded-full bg-green-500/60" />
+              <span className="ml-2 text-neutral-600">spend ledger — Stripe</span>
+            </div>
+            <div className="p-4 space-y-2.5">
+              {[
+                { cat: 'competitors',  reason: 'Map the competitive landscape',         tx: '0x3f8a…c2d1' },
+                { cat: 'recentMoves', reason: 'Track recent product moves',             tx: '0xa14b…9e72' },
+                { cat: 'sentiment',   reason: 'Gauge customer sentiment',               tx: '0x72fc…4a0b' },
+                { cat: 'pricing',     reason: 'Benchmark pricing and packaging',        tx: '0xc9d3…7f3e' },
+                { cat: 'techSignals', reason: 'Identify engineering direction',         tx: '0x1e2a…8c91' },
+              ].map(({ cat, reason, tx }) => (
+                <div key={cat} className="flex items-center gap-3 text-[11px]">
+                  <span className="text-green-400 w-3">✓</span>
+                  <span className="text-neutral-300 w-28 shrink-0">{cat}</span>
+                  <span className="text-neutral-600 flex-1 truncate">{reason}</span>
+                  <span className="text-neutral-500 shrink-0">0.001 USDC</span>
+                  <span className="text-[#eab308] shrink-0">{tx}</span>
+                </div>
+              ))}
+              <div className="border-t border-neutral-800 pt-2 flex justify-between text-[11px]">
+                <span className="text-neutral-600">Total</span>
+                <span className="text-white font-semibold">0.005 USDC</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Features */}
+        <section className="mb-20 grid grid-cols-1 sm:grid-cols-2 gap-12 items-start">
+          <div>
+            <h2 className="text-2xl font-bold mb-2">Built for agentic workflows</h2>
+            <p className="text-neutral-500 text-sm mb-8">
+              Scout is a template for what AI agents can buy on the internet — intelligence, data,
+              compute — paid with micropayments, without subscriptions or API key sprawl.
+            </p>
+            <ul className="space-y-3">
+              {FEATURES.map(f => (
+                <li key={f} className="flex items-center gap-2.5 text-sm text-neutral-300">
+                  <CheckCircle2 className="h-4 w-4 text-green-400 shrink-0" />
+                  {f}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="space-y-3">
+            <p className="text-xs font-medium text-neutral-600 uppercase tracking-wider mb-4">Powered by</p>
+            {STACK.map(({ name, role, color }) => (
+              <div
+                key={name}
+                className={`flex items-center gap-3 rounded-lg border px-4 py-3 ${color}`}
+              >
+                <span className="font-bold text-sm w-16">{name}</span>
+                <span className="text-xs opacity-70">{role}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="mb-20 text-center rounded-2xl border border-neutral-800 bg-neutral-950 py-16 px-8">
+          <h2 className="text-3xl font-bold mb-4">Ready to scout a competitor?</h2>
+          <p className="text-neutral-500 text-sm mb-8 max-w-md mx-auto">
+            Run in mock mode for free, or connect a Circle Agent Wallet and spend $0.005 on a real brief.
+          </p>
+          <Link
+            href="/research"
+            className="inline-flex items-center gap-2 rounded-xl bg-[#eab308] px-8 py-4 text-base font-semibold text-black hover:bg-[#ca8a04] transition-colors"
+          >
+            Launch Scout <ArrowRight className="h-4 w-4" />
+          </Link>
+        </section>
 
       </div>
+
+      {/* Footer */}
+      <footer className="border-t border-neutral-900 px-6 py-8">
+        <div className="mx-auto max-w-6xl flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <Target className="h-4 w-4 text-[#eab308]" />
+            <span className="text-sm font-medium">Scout</span>
+            <span className="text-xs text-neutral-600">— autonomous competitive intelligence</span>
+          </div>
+          <div className="flex items-center gap-4 text-xs text-neutral-700">
+            <span>Circle · Tavily · Nebius · x402</span>
+          </div>
+        </div>
+      </footer>
+
     </main>
   )
 }

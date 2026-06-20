@@ -116,7 +116,7 @@ export function CompetitiveBrief({ company, brief, isLoading }: Props) {
           {brief.recentMoves.map((m, i) => (
             <div key={i} className="flex gap-3">
               <div className="flex flex-col items-center shrink-0">
-                <div className="h-2 w-2 rounded-full bg-[#3b82f6] mt-1.5" />
+                <div className="h-2 w-2 rounded-full bg-[#eab308] mt-1.5" />
                 {i < brief.recentMoves.length - 1 && (
                   <div className="w-px flex-1 bg-neutral-800 min-h-[1.5rem]" />
                 )}
@@ -128,7 +128,7 @@ export function CompetitiveBrief({ company, brief, isLoading }: Props) {
                   href={m.source}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-xs text-[#3b82f6] hover:text-blue-300 mt-1"
+                  className="inline-flex items-center gap-1 text-xs text-[#eab308] hover:text-yellow-300 mt-1"
                 >
                   Source <ExternalLink className="h-3 w-3" />
                 </a>
@@ -163,7 +163,7 @@ export function CompetitiveBrief({ company, brief, isLoading }: Props) {
         <div className="space-y-1.5">
           {brief.pricing.tiers.map((tier, i) => (
             <div key={i} className="flex items-start gap-2">
-              <span className="text-[#3b82f6] shrink-0 mt-0.5 select-none">·</span>
+              <span className="text-[#eab308] shrink-0 mt-0.5 select-none">·</span>
               <span className="text-xs text-neutral-400 leading-relaxed">{tier}</span>
             </div>
           ))}
