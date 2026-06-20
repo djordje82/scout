@@ -85,7 +85,7 @@ See task #27. Requires:
 - `#27` ✅ DONE — Circle CLI + Agent Skill host setup (CLI installed, logged in, wallet provisioned on Base mainnet — funding deferred)
 - `#6` ✅ DONE — Build x402-gated premium search endpoint (`@x402/next`, v2)
 - `#7` ✅ DONE — Integrate Circle Agent Wallet + Nanopayments (vendor circle-tools)
-- `#8` — End-to-end Circle Agent Wallet payment test (Base mainnet) — blocked on wallet funding
+- `#8` ✅ DONE — End-to-end Circle Agent Wallet payment test (Base mainnet)
 - `#25` ✅ DONE — Build Scout agent: runScout() in lib/agent/index.ts, 5-category loop, budget cap, per-step mock delays (700ms/search + 1000ms synthesis), fake receipts in mock mode
 - `#26` — (Optional) List & discover service via Circle Agent Marketplace
 
@@ -102,7 +102,7 @@ See task #27. Requires:
 - `#16` ✅ DONE — Build "Start Research" button + progress animation + budget display
 
 ### Stream E — Pitch, Demo & Deploy
-- `#17` — Write README with prize track documentation
+- `#17` ✅ DONE — Write README with prize track documentation
 - `#18` — Create pitch deck (4 slides)
 - `#19` ✅ DONE — Verify USE_MOCK demo path end-to-end: 8/8 checklist items pass, 4.54s response, UI confirmed working
 - `#20` — Record video walkthrough

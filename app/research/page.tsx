@@ -22,11 +22,11 @@ const FOCUS_PRESETS = [
 ]
 
 const STEPS = [
-  { label: 'Searching competitors',          cost: 0.001 },
-  { label: 'Searching recent moves',         cost: 0.001 },
-  { label: 'Searching customer sentiment',   cost: 0.001 },
-  { label: 'Searching pricing intelligence', cost: 0.001 },
-  { label: 'Searching tech signals',         cost: 0.001 },
+  { label: 'Searching competitors',          cost: 0.01 },
+  { label: 'Searching recent moves',         cost: 0.01 },
+  { label: 'Searching customer sentiment',   cost: 0.01 },
+  { label: 'Searching pricing intelligence', cost: 0.01 },
+  { label: 'Searching tech signals',         cost: 0.01 },
   { label: 'Synthesizing brief with Nebius', cost: 0     },
 ]
 

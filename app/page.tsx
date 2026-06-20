@@ -12,7 +12,7 @@ const HOW_IT_WORKS = [
     step: '02',
     icon: Wallet,
     title: 'Agent buys intelligence',
-    desc: 'Scout\'s Circle Agent Wallet pays $0.001 USDC per query via x402 nanopayments — one purchase per research category.',
+    desc: 'Scout\'s Circle Agent Wallet pays $0.01 USDC per query via x402 nanopayments — one purchase per research category.',
   },
   {
     step: '03',
@@ -101,7 +101,7 @@ export default function Landing() {
         <section className="mb-20">
           <div className="rounded-2xl border border-neutral-800 bg-neutral-950 p-8 grid grid-cols-3 divide-x divide-neutral-800 text-center">
             <div className="px-4">
-              <p className="text-3xl font-bold text-white mb-1">$0.001</p>
+              <p className="text-3xl font-bold text-white mb-1">$0.01</p>
               <p className="text-sm text-neutral-500">per search query</p>
             </div>
             <div className="px-4">
@@ -109,7 +109,7 @@ export default function Landing() {
               <p className="text-sm text-neutral-500">research categories</p>
             </div>
             <div className="px-4">
-              <p className="text-3xl font-bold text-white mb-1">$0.005</p>
+              <p className="text-3xl font-bold text-white mb-1">$0.05</p>
               <p className="text-sm text-neutral-500">full brief, total cost</p>
             </div>
           </div>
@@ -167,13 +167,13 @@ export default function Landing() {
                   <span className="text-green-400 w-3">✓</span>
                   <span className="text-neutral-300 w-28 shrink-0">{cat}</span>
                   <span className="text-neutral-600 flex-1 truncate">{reason}</span>
-                  <span className="text-neutral-500 shrink-0">0.001 USDC</span>
+                  <span className="text-neutral-500 shrink-0">0.01 USDC</span>
                   <span className="text-[#eab308] shrink-0">{tx}</span>
                 </div>
               ))}
               <div className="border-t border-neutral-800 pt-2 flex justify-between text-[11px]">
                 <span className="text-neutral-600">Total</span>
-                <span className="text-white font-semibold">0.005 USDC</span>
+                <span className="text-white font-semibold">0.05 USDC</span>
               </div>
             </div>
           </div>
@@ -215,7 +215,7 @@ export default function Landing() {
         <section className="mb-20 text-center rounded-2xl border border-neutral-800 bg-neutral-950 py-16 px-8">
           <h2 className="text-3xl font-bold mb-4">Ready to scout a competitor?</h2>
           <p className="text-neutral-500 text-sm mb-8 max-w-md mx-auto">
-            Run in mock mode for free, or connect a Circle Agent Wallet and spend $0.005 on a real brief.
+            Run in mock mode for free, or connect a Circle Agent Wallet and spend $0.05 on a real brief.
           </p>
           <Link
             href="/research"

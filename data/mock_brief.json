@@ -78,39 +78,39 @@
     {
       "query": "Notion competitors alternatives 2026",
       "category": "competitors",
-      "cost": 0.001,
+      "cost": 0.01,
       "reason": "Mapping the competitive landscape is foundational — needed before any other category can be contextualised.",
       "receipt": "0x4a7b2c9d1e3f5a8b6c0d2e4f7a1b3c5d7e9f0a2b4c6d8e0f2a4b6c8d0e2f4a6b"
     },
     {
       "query": "Notion product launch announcement news last 30 days",
       "category": "recentMoves",
-      "cost": 0.001,
+      "cost": 0.01,
       "reason": "Recent moves reveal strategic direction and near-term threats — high signal-to-noise ratio for time-sensitive intelligence.",
       "receipt": "0x9f3e1d7c5b2a8f4e0d6c3b1a9f7e5d2c0b8a6f4e2d0c8b6a4f2e0d8c6b4a2f0e8"
     },
     {
       "query": "Notion user reviews complaints praise Reddit 2026",
       "category": "sentiment",
-      "cost": 0.001,
+      "cost": 0.01,
       "reason": "Customer sentiment uncovers product gaps and retention risks that official sources obscure — Reddit and review sites are the highest-fidelity signal.",
       "receipt": "0x2b8f5c1e9a6d3f0b7e4c1a8f5d2b9e6c3a0f7d4b1e8c5a2f9d6b3e0c7a4f1d8b5"
     },
     {
       "query": "Notion pricing plans cost tiers 2026",
       "category": "pricing",
-      "cost": 0.001,
+      "cost": 0.01,
       "reason": "Pricing intelligence is directly actionable for positioning and competitive displacement — worth buying even near budget cap.",
       "receipt": "0x6c0e4a8f2d6b0e4a8f2d6b0e4a8f2d6b0e4a8f2d6b0e4a8f2d6b0e4a8f2d6b0e4"
     },
     {
       "query": "Notion tech stack engineering blog infrastructure 2026",
       "category": "techSignals",
-      "cost": 0.001,
+      "cost": 0.01,
       "reason": "Tech signals reveal build vs buy decisions, scaling constraints, and where R&D investment is going — valuable for evaluating long-term capability trajectory.",
       "receipt": "0xd4b2f0e8c6a4f2e0d8b6a4f2e0d8c6b4a2f0e8d6b4a2f0e8c6a4f2e0d8b6a4f2e0"
     }
   ],
-  "totalSpent": 0.005,
-  "remainingBudget": 4.995
+  "totalSpent": 0.05,
+  "remainingBudget": 4.95
 }

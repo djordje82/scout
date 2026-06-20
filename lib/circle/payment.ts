@@ -109,7 +109,7 @@ export async function payForService(
     })
     if (!res.ok) throw new Error(`Search endpoint returned ${res.status}`)
     const data = await res.text()
-    return { data, receipt: mockReceipt(), cost: '0.001' }
+    return { data, receipt: mockReceipt(), cost: '0.01' }
   }
 
   const httpClient = getX402HttpClient()
@@ -158,5 +158,5 @@ export async function payForService(
   const data = await paid.text()
   const receipt = extractReceipt(paid.headers)
 
-  return { data, receipt, cost: '0.001' }
+  return { data, receipt, cost: '0.01' }
 }

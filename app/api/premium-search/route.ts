@@ -41,10 +41,10 @@ export const POST = withX402(
     accepts: {
       scheme: 'exact',
       payTo: AGENT_WALLET,
-      price: '$0.001',
+      price: '$0.01',
       network: net.caip2,
     },
-    description: 'Competitive intelligence search — 0.001 USDC per query',
+    description: 'Competitive intelligence search — 0.01 USDC per query',
   },
   server
 )

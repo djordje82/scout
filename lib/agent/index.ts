@@ -20,7 +20,7 @@ const CATEGORY_REASONS: Record<ResearchCategory, string> = {
   techSignals:  'Identify engineering and infrastructure direction',
 }
 
-const COST_PER_SEARCH = 0.001
+const COST_PER_SEARCH = 0.01
 
 export type RunScoutOptions = {
   company: string
