@@ -54,6 +54,7 @@ export async function runScout({
 
   const premiumSearchUrl =
     process.env.PREMIUM_SEARCH_URL ??
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}/api/premium-search` : null) ??
     `http://localhost:${process.env.PORT ?? 3000}/api/premium-search`
 
   for (const category of CATEGORIES) {
