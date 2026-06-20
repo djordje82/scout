@@ -1,6 +1,6 @@
 # Scout — Documentation & Progress Tracking
 
-_Last updated: 2026-06-20 (evening)_
+_Last updated: 2026-06-20 (night)_
 
 ---
 
@@ -40,11 +40,11 @@ Scout is an autonomous competitive intelligence agent. The user enters a company
 | 11 | Scout orchestration API | `app/api/scout/route.ts` delegates to `runScout()`. Replaced mock-only stub. |
 | 19 | USE_MOCK demo verified | 8/8 checklist items pass. 4.54s response synced to 4.5s progress animation. UI confirmed working. |
 
-### 🔲 Pending — One Remaining Blocker
+### ✅ Live Payment — Done
 
-| # | Task | Blocked by | Notes |
-|---|---|---|---|
-| 8 | End-to-end Circle payment test | wallet funding | Fund wallet → `getWalletBalance` → `payForService` → verify on BaseScan. Deferred — USE_MOCK covers demo. |
+| # | Task | Notes |
+|---|---|---|
+| 8 | End-to-end Circle payment test | DONE. Full 5-category live run confirmed on Base Sepolia testnet. Circle Agent Wallet `0x5184811fa86a773c161f93b814a4420ca188ac12` pays 0.001 USDC/search via x402 ExactEvmScheme; settlements verified on basescan.org/sepolia. NETWORK=testnet mode added. Nebius model renamed to `Qwen/Qwen3-30B-A3B-Instruct-2507`. |
 
 ### 🔲 Pending — Stream E (Pitch, Demo, Deploy)
 
@@ -128,11 +128,11 @@ components/SpendLedger.tsx            — spend entries, receipts, budget bar
 
 | Priority | Task | Notes |
 |---|---|---|
-| High | #17 README | Prize eligibility, setup, env vars |
+| ✅ Done | #8 Live payment | Base Sepolia testnet confirmed |
+| ✅ Done | #17 README | Written — prize tracks, setup, env vars, arch |
 | High | #21 Vercel deploy | USE_MOCK=true public instance |
 | High | #20 Video walkthrough | ~60s screen capture |
 | Medium | #18 Pitch deck | 4 slides, PDF |
 | Low | #22 OOBE Synapse RPC | Extra prize track |
 | Low | #23 ERC-8004 agent identity | Extra prize track |
 | Low | #24 MCP endpoint | Extra prize track |
-| Stretch | #8 Live Circle payment | Needs wallet funding |

@@ -16,7 +16,7 @@ type CategoryResults = {
 }
 
 const NEBIUS_BASE_URL = process.env.NEBIUS_BASE_URL ?? 'https://api.tokenfactory.nebius.com/v1'
-const DEFAULT_MODEL = 'Qwen/Qwen3-30B-A3B'
+const DEFAULT_MODEL = 'Qwen/Qwen3-30B-A3B-Instruct-2507'
 
 function formatResults(results: CategoryResults): string {
   const sections = [
