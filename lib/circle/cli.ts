@@ -1,4 +1,7 @@
-import { execFileSync } from 'node:child_process';
+import { execFileSync, execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+
+const execFileAsync = promisify(execFile);
 
 export interface CliOptions {
   /** Append `--output json` if not already present. */
@@ -126,6 +129,38 @@ export function runCircle(args: readonly string[], options: CliOptions = {}): st
   // Unreachable: the loop either returns or throws on the final attempt.
   // The non-null assertion satisfies TS control-flow; lastError is always set.
   throw lastError!;
+}
+
+/**
+ * Async variant of runCircle — does NOT block the event loop.
+ * Must be used for any CLI call that itself makes an HTTP request back to this
+ * server (e.g. `services pay`), otherwise the event loop deadlocks.
+ */
+export async function runCircleAsync(args: readonly string[], options: CliOptions = {}): Promise<string> {
+  const finalArgs =
+    options.json && !args.includes('--output') ? [...args, '--output', 'json'] : [...args];
+  const binary = options.binary ?? 'circle';
+  try {
+    const { stdout } = await execFileAsync(binary, finalArgs, {
+      cwd: options.cwd,
+      env: options.env ?? process.env,
+      encoding: 'utf8',
+      maxBuffer: 10 * 1024 * 1024,
+    });
+    return stdout;
+  } catch (err) {
+    const e = err as { stderr?: Buffer | string; stdout?: Buffer | string; code?: number | null; message: string };
+    const stderr = e.stderr ? e.stderr.toString() : '';
+    const stdout = e.stdout ? e.stdout.toString() : '';
+    const detail = stderr.trim() || stdout.trim() || e.message;
+    throw new CircleCliError(
+      `circle ${finalArgs.join(' ')} failed: ${detail}`,
+      finalArgs,
+      stdout,
+      stderr,
+      e.code ?? null,
+    );
+  }
 }
 
 /** Run the CLI with `--output json` and parse the resulting JSON payload. */

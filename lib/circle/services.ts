@@ -1,4 +1,4 @@
-import { runCircle, runCircleJson } from './cli';
+import { runCircle, runCircleAsync, runCircleJson } from './cli';
 import {
   CHAIN_PREFERENCE,
   chainCli,
@@ -439,8 +439,10 @@ function extractTxHash(source: string | undefined): string | undefined {
   }
 }
 
-/** The `{ response, payment }` envelope `circle services pay --output json` prints. */
+/** The envelope `circle services pay --output json` prints.
+ *  CLI v2+ wraps as `{ data: { response, payment } }`; older builds use the flat form. */
 interface RawPayEnvelope {
+  data?: { response?: unknown; payment?: { amount?: string; receipt?: string } };
   response?: unknown;
   payment?: { amount?: string; receipt?: string };
 }
@@ -486,12 +488,12 @@ export async function payService(input: PayServiceInput): Promise<PaymentResult>
 
   let out: string;
   try {
-    out = runCircle(args);
+    out = await runCircleAsync(args);
   } catch (e) {
     throw explainPayError(e, input.url);
   }
 
-  // The call settled the moment runCircle returned without throwing; from here
+  // The call settled the moment runCircleAsync resolved without throwing; from here
   // we only shape the body for the caller, never re-derive success.
   const trimmed = out.trim();
   let envelope: RawPayEnvelope;
@@ -507,17 +509,22 @@ export async function payService(input: PayServiceInput): Promise<PaymentResult>
     };
   }
 
+  // CLI v2+ wraps as { data: { response, payment } }; unwrap if present.
+  const inner = envelope.data ?? envelope;
+  const rawResponse = inner.response;
+  const payment = inner.payment;
+
   const response =
-    envelope.response === undefined
+    rawResponse === undefined
       ? trimmed
-      : typeof envelope.response === 'string'
-        ? envelope.response
-        : JSON.stringify(envelope.response);
+      : typeof rawResponse === 'string'
+        ? rawResponse
+        : JSON.stringify(rawResponse);
 
   return {
     response,
-    txHash: extractTxHash(envelope.payment?.receipt) ?? extractTxHash(trimmed),
+    txHash: extractTxHash(payment?.receipt) ?? extractTxHash(trimmed),
     serviceUrl: input.url,
-    amount: envelope.payment?.amount ?? '',
+    amount: payment?.amount ?? '',
   };
 }

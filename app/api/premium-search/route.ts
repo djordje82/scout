@@ -5,10 +5,12 @@ import { HTTPFacilitatorClient } from '@x402/core/http'
 import { facilitator } from '@coinbase/x402'
 import { ExactEvmScheme } from '@x402/evm/exact/server'
 import { searchCategory } from '@/lib/tavily'
+import { networkConfig } from '@/lib/network'
 import type { ResearchCategory } from '@/lib/types'
 
-const AGENT_WALLET = process.env.AGENT_WALLET_ADDRESS ?? '0xdf907eaaca1a7996ee248dd7f51dd240cba08ec9'
+const AGENT_WALLET = (process.env.AGENT_WALLET_ADDRESS ?? '0xdf907eaaca1a7996ee248dd7f51dd240cba08ec9').trim()
 const FACILITATOR_URL = process.env.X402_FACILITATOR_URL ?? 'https://x402.org/facilitator'
+const net = networkConfig()
 
 const facilitatorClient = new HTTPFacilitatorClient({
   ...facilitator,
@@ -16,7 +18,7 @@ const facilitatorClient = new HTTPFacilitatorClient({
 })
 
 const server = new x402ResourceServer(facilitatorClient)
-  .register('eip155:8453', new ExactEvmScheme())
+  .register(net.caip2, new ExactEvmScheme())
 
 async function handler(request: NextRequest): Promise<NextResponse> {
   const body = await request.json() as { query: string; category: ResearchCategory }
@@ -40,7 +42,7 @@ export const POST = withX402(
       scheme: 'exact',
       payTo: AGENT_WALLET,
       price: '$0.001',
-      network: 'eip155:8453',
+      network: net.caip2,
     },
     description: 'Competitive intelligence search — 0.001 USDC per query',
   },

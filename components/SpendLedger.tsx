@@ -71,7 +71,7 @@ export function SpendLedger({ result, isLoading }: Props) {
                 </div>
                 <p className="text-[11px] text-neutral-500 leading-relaxed">{entry.reason}</p>
                 <a
-                  href={`https://basescan.org/tx/${entry.receipt}`}
+                  href={`${process.env.NEXT_PUBLIC_BLOCK_EXPLORER ?? 'https://basescan.org'}/tx/${entry.receipt}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1 font-mono text-[10px] text-neutral-700 hover:text-neutral-400 transition-colors"

@@ -1,5 +1,6 @@
 import { listWallets, getBalance } from './wallet'
 import { payService } from './services'
+import { networkConfig } from '@/lib/network'
 
 export type PayResult = {
   data: string
@@ -19,6 +20,8 @@ function mockReceipt(): string {
 }
 
 export async function getAgentWalletAddress(): Promise<string> {
+  const envAddress = process.env.AGENT_WALLET_ADDRESS?.trim()
+  if (envAddress) return envAddress
   const wallets = await listWallets()
   const address = wallets[0]?.address
   if (!address) throw new Error('No Circle agent wallet found. Run: circle wallet login <email>')
@@ -30,8 +33,9 @@ export async function getWalletBalance(): Promise<WalletBalance> {
     return { address: MOCK_WALLET, usdc: 5.0 }
   }
 
+  const { circleChain } = networkConfig()
   const address = await getAgentWalletAddress()
-  const balance = await getBalance({ address, chain: 'BASE' })
+  const balance = await getBalance({ address, chain: circleChain })
   const usdcToken = balance.tokens.find(t => t.symbol === 'USDC')
   return { address, usdc: parseFloat(usdcToken?.amount ?? '0') }
 }
@@ -52,8 +56,9 @@ export async function payForService(
     return { data, receipt: mockReceipt(), cost: '0.001' }
   }
 
+  const { circleChain } = networkConfig()
   const address = await getAgentWalletAddress()
-  const result = await payService({ url, address, data: body, method: 'POST', chain: 'BASE' })
+  const result = await payService({ url, address, data: body, method: 'POST', chain: circleChain })
   return {
     data: result.response,
     receipt: result.txHash ?? '',

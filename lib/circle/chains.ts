@@ -2,7 +2,7 @@
  * The EVM chains the kit can pay on. The kit prefers Base and falls back to
  * Polygon only when a seller does not offer Base (see CHAIN_PREFERENCE).
  */
-export type Chain = 'BASE' | 'POLYGON';
+export type Chain = 'BASE' | 'BASE-SEPOLIA' | 'POLYGON';
 
 /** Chain used by default for wallet/gateway reads that are not service-bound. */
 export const DEFAULT_CHAIN: Chain = 'BASE';
@@ -28,6 +28,12 @@ const CHAINS: Record<Chain, ChainInfo> = {
     label: 'Base',
     rpcUrl: 'https://mainnet.base.org',
     networks: ['eip155:8453', 'base'],
+  },
+  'BASE-SEPOLIA': {
+    cli: 'BASE-SEPOLIA',
+    label: 'Base Sepolia',
+    rpcUrl: 'https://sepolia.base.org',
+    networks: ['eip155:84532', 'base-sepolia'],
   },
   POLYGON: {
     cli: 'MATIC',

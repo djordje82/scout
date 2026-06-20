@@ -1,5 +1,7 @@
 import type { ScoutResponse } from './types'
 
+const BLOCK_EXPLORER = process.env.NEXT_PUBLIC_BLOCK_EXPLORER ?? 'https://basescan.org'
+
 function download(filename: string, content: string, mime: string) {
   const blob = new Blob([content], { type: mime })
   const url = URL.createObjectURL(blob)
@@ -70,7 +72,7 @@ export function exportMarkdown(result: ScoutResponse): void {
     '| Category | Query | Cost | Receipt |',
     '|---|---|---|---|',
     ...spendLedger.map(e =>
-      `| ${e.category} | ${e.query} | $${e.cost.toFixed(3)} USDC | [${e.receipt.slice(0, 10)}…](https://basescan.org/tx/${e.receipt}) |`
+      `| ${e.category} | ${e.query} | $${e.cost.toFixed(3)} USDC | [${e.receipt.slice(0, 10)}…](${BLOCK_EXPLORER}/tx/${e.receipt}) |`
     ),
     '',
     `**Total:** $${totalSpent.toFixed(4)} USDC spent of $${budget.toFixed(2)} USDC budget`,
@@ -106,7 +108,7 @@ export function exportPdf(result: ScoutResponse): void {
     .join('')
 
   const ledgerRows = spendLedger
-    .map(e => `<tr><td>${e.category}</td><td>${e.query}</td><td>$${e.cost.toFixed(3)}</td><td><a href="https://basescan.org/tx/${e.receipt}">${e.receipt.slice(0, 14)}…</a></td></tr>`)
+    .map(e => `<tr><td>${e.category}</td><td>${e.query}</td><td>$${e.cost.toFixed(3)}</td><td><a href="${BLOCK_EXPLORER}/tx/${e.receipt}">${e.receipt.slice(0, 14)}…</a></td></tr>`)
     .join('')
 
   const html = `<!DOCTYPE html>
