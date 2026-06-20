@@ -2,18 +2,8 @@
 
 Scout is an autonomous AI agent that maps a competitive landscape on demand. Enter a company name and a USDC budget; Scout breaks the research into five paid sub-queries, buys each Tavily search individually via x402 nanopayments from a Circle Agent Wallet, synthesizes a structured brief with a Nebius Token Factory LLM, and returns every insight with a spend ledger showing what each piece of intelligence cost and why it was worth buying.
 
-**Live demo:** https://scout-demo.vercel.app (mock mode — no wallet required)
+**Live demo:** https://scout-two-mocha.vercel.app/
 
----
-
-## Prize Tracks
-
-| Prize | Sponsor | Requirement | How Scout qualifies |
-|---|---|---|---|
-| $1,000 | Circle — Best Agent Wallet App | Circle Agent Wallet + x402 nanopayments, budget cap, spend ledger with receipts | Agent wallet pays per search; ledger shows USDC spent per category with Base tx receipt links |
-| $500 | Tavily — Agentic Search | Tavily API for agentic, multi-step search | 5 strategic search queries per research session (competitors, recent moves, sentiment, pricing, tech signals), each paid via x402 |
-| $1,000 | Nebius — Token Factory | Direct Nebius Token Factory LLM inference | Qwen3-30B synthesises raw search results into a structured competitive brief (JSON schema) |
-| $500 + RPC | OOBE Protocol — Agent Infra | Synapse RPC + ERC-8004 agent identity + MCP endpoint | *(stretch)* Synapse x402 data source, ERC-8004 identity registry, scout_analysis MCP tool |
 
 ---
 
@@ -27,7 +17,7 @@ User: "Research Stripe, budget $0.01"
      │
      ├─ for each of 5 categories:
      │     ├─ buildQuery(company, category, focus)
-     │     ├─ Circle Agent Wallet signs x402 payment (0.001 USDC)
+     │     ├─ Circle Agent Wallet signs x402 payment (0.01 USDC)
      │     ├─ POST /api/premium-search  (x402-gated, ExactEvmScheme)
      │     ├─ Tavily search runs → results
      │     └─ spendLedger.push({ category, cost, txHash })
@@ -36,7 +26,7 @@ User: "Research Stripe, budget $0.01"
            └─ Nebius Qwen3-30B → CompetitiveBriefData (JSON)
 ```
 
-Each Tavily search costs $0.001 USDC and is paid as an x402 nanopayment on Base (or Base Sepolia in testnet mode). The Circle Agent Wallet signs the EIP-3009 authorization; the x402.org facilitator settles on-chain. No gas required from the caller.
+Each Tavily search costs $0.01 USDC and is paid as an x402 nanopayment on Base (or Base Sepolia in testnet mode). The Circle Agent Wallet signs the EIP-3009 authorization; the x402.org facilitator settles on-chain. No gas required from the caller.
 
 ---
 
@@ -47,7 +37,7 @@ app/
   page.tsx                  — dashboard UI (company input, budget, results)
   api/
     scout/route.ts          — orchestration endpoint → runScout()
-    premium-search/route.ts — x402-gated Tavily search (0.001 USDC/call)
+    premium-search/route.ts — x402-gated Tavily search (0.01 USDC/call)
 
 lib/
   agent/index.ts            — runScout(): 5-category loop, budget cap, spend ledger
@@ -110,12 +100,12 @@ Set `USE_MOCK=true` in `.env.local`. The agent runs a pre-baked Notion competiti
    circle wallet login <email>
    NETWORK=mainnet
    ```
-3. Fund your agent wallet with USDC (0.005 USDC covers a full 5-category run)
+3. Fund your agent wallet with USDC (0.05 USDC covers a full 5-category run)
 4. Set `AGENT_WALLET_ADDRESS` to your wallet address
 5. Set your Tavily and Nebius API keys
 6. Run `npm run dev` and click "Start Research"
 
-Each research session costs $0.005 USDC (5 searches × $0.001).
+Each research session costs $0.05 USDC (5 searches × $0.01).
 
 ---
 
@@ -175,7 +165,7 @@ Every Scout run returns a `spendLedger` array showing:
   {
     "category": "competitors",
     "query": "Stripe competitors payments platforms",
-    "cost": 0.001,
+    "cost": 0.01,
     "reason": "Map the competitive landscape",
     "receipt": "0xabc123..."
   },

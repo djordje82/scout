@@ -4,16 +4,16 @@
 
 ## Slide 1 — Problem
 
-### Competitive research is broken.
+### Competitive research is not broken. But it's annoying!
 
-You need to know what your rivals are doing. So you spend **2–3 hours** Googling, reading, tab-switching — and you end up with a wall of links, not a brief.
+You need to know what your rivals are doing. So you spend **hours** Googling, reading, tab-switching, coppying text blocks, adding links — and you end up with a mess, not a brief. Writing the brief takes additional **hours**.
 
 Existing tools either:
 - Give you raw search results (still your job to synthesise)
+- Generate reports that contain imainary data
 - Lock the good stuff behind expensive SaaS subscriptions
-- Require a human analyst to turn data into decisions
 
-**The real problem:** There is no autonomous agent that can *go pay for the research itself*, synthesise it, and hand you a structured brief — with receipts.
+**The real problem:** There is no autonomous agent that can *go pay for the research itself*, synthesise it, and hand you a structured brief — with receipts (both fiscal and for resources).
 
 ---
 
@@ -24,7 +24,7 @@ Existing tools either:
 > Enter a company name and a budget. Scout does the rest.
 
 1. **Scout plans** — breaks research into 5 strategic categories: competitors, recent moves, customer sentiment, pricing, tech signals
-2. **Scout pays** — uses a Circle Agent Wallet to make x402 nanopayments for each search query (0.001 USDC per query)
+2. **Scout pays** — uses a Circle Agent Wallet to make x402 nanopayments for each search query (0.01 USDC per query)
 3. **Scout searches** — Tavily advanced search, one paid query per category
 4. **Scout synthesises** — Nebius Token Factory turns raw results into a structured competitive brief
 5. **Scout reports** — returns the full brief + a spend ledger showing exactly what each insight cost and why it was worth buying
@@ -39,7 +39,7 @@ Existing tools either:
 
 | Layer | Technology | What it does |
 |---|---|---|
-| 💳 Payments | **Circle Agent Wallet + x402 Nanopayments** | Agent pays 0.001 USDC per search via EIP-3009 signed transfers on Base. Spend ledger with BaseScan receipts. Budget cap enforced. |
+| 💳 Payments | **Circle Agent Wallet + x402 Nanopayments** | Agent pays 0.01 USDC per search via EIP-3009 signed transfers on Base. Spend ledger with BaseScan receipts. Budget cap enforced. |
 | 🔍 Search | **Tavily Agentic Search** | 5-category advanced search — competitors, moves, sentiment, pricing, tech signals. Real-time web results, not a static dataset. |
 | 🧠 Synthesis | **Nebius Token Factory** | Direct Token Factory API (Fast tier, `Qwen/Qwen3-30B-A3B-Instruct-2507`). Turns raw search results into a structured JSON brief. |
 | 🔗 Chain | **Base (mainnet / Sepolia)** | Gasless USDC nanopayments. Every payment verifiable on BaseScan. |
@@ -66,10 +66,10 @@ What you'll see:
 
 - ⏱ **< 30 seconds** — full research cycle completes
 - 🔍 **5 Tavily queries** run in sequence, one per category
-- 💳 **5 x402 payments** — 0.001 USDC each, paid from Circle Agent Wallet
+- 💳 **5 x402 payments** — 0.01 USDC each, paid from Circle Agent Wallet
 - 📄 **Competitive brief** — overview, competitors, recent moves, sentiment, pricing, tech signals
 - 🧾 **Spend ledger** — category, cost, reason the agent decided to buy it, BaseScan receipt link
-- 💰 **Total spent: 0.005 USDC** — remaining budget displayed
+- 💰 **Total spent: 0.05 USDC** — remaining budget displayed
 
 > "Scout doesn't just search the web. It pays for the search, synthesises the results, and shows you the receipt."
 
