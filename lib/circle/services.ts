@@ -1,4 +1,4 @@
-import { runCircle, runCircleAsync, runCircleJson } from './cli';
+import { runCircleAsync, runCircleJson } from './cli';
 import {
   CHAIN_PREFERENCE,
   chainCli,

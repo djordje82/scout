@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-export const dynamic = 'force-dynamic'
+
 import { withX402, x402ResourceServer } from '@x402/next'
 import { HTTPFacilitatorClient } from '@x402/core/http'
 import { facilitator } from '@coinbase/x402'
@@ -21,7 +21,7 @@ const server = new x402ResourceServer(facilitatorClient)
   .register(net.caip2, new ExactEvmScheme())
 
 async function handler(request: NextRequest): Promise<NextResponse> {
-  const body = await request.json() as { query: string; category: ResearchCategory }
+  const body = await request.json() as { query: string; category: ResearchCategory; focus?: string }
 
   if (!body.query || !body.category) {
     return NextResponse.json({ error: 'query and category are required' }, { status: 400 })
@@ -30,6 +30,7 @@ async function handler(request: NextRequest): Promise<NextResponse> {
   const results = await searchCategory({
     company: body.query,
     category: body.category,
+    focus: body.focus,
   })
 
   return NextResponse.json(results)

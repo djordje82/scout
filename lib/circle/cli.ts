@@ -1,7 +1,11 @@
-import { execFileSync, execFile } from 'node:child_process';
+const childProcess = typeof window === 'undefined' ? eval('require')('node:child_process') : null;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const execFileSync = childProcess ? childProcess.execFileSync : (null as any);
+const execFile = childProcess ? childProcess.execFile : null;
 import { promisify } from 'node:util';
 
-const execFileAsync = promisify(execFile);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const execFileAsync = execFile ? promisify(execFile) : (null as any);
 
 export interface CliOptions {
   /** Append `--output json` if not already present. */
@@ -93,7 +97,7 @@ export function runCircle(args: readonly string[], options: CliOptions = {}): st
   let lastError: CircleCliError | undefined;
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      return execFileSync(binary, finalArgs, {
+      return execFileSync(/* turbopackIgnore: true */ binary, finalArgs, {
         cwd: options.cwd,
         env: options.env ?? process.env,
         encoding: 'utf8',
@@ -141,7 +145,7 @@ export async function runCircleAsync(args: readonly string[], options: CliOption
     options.json && !args.includes('--output') ? [...args, '--output', 'json'] : [...args];
   const binary = options.binary ?? 'circle';
   try {
-    const { stdout } = await execFileAsync(binary, finalArgs, {
+    const { stdout } = await execFileAsync(/* turbopackIgnore: true */ binary, finalArgs, {
       cwd: options.cwd,
       env: options.env ?? process.env,
       encoding: 'utf8',

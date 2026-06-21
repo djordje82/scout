@@ -138,7 +138,7 @@ export async function orchestrateResearch(params: {
         await delay(700)
         receipt = fakeReceipt()
       } else {
-        const paid = await payForService(premiumSearchUrl, { query: company, category })
+        const paid = await payForService(premiumSearchUrl, { query: company, category, focus })
         results = JSON.parse(paid.data) as TavilyResult[]
         receipt = paid.receipt
       }

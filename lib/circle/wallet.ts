@@ -106,10 +106,7 @@ interface RawBalance {
   balances?: RawTokenBalance[];
 }
 
-/** Strip a `{ data: T }` envelope if present. */
-function unwrap<T>(raw: { data?: T } | T): T {
-  return (raw as { data?: T }).data ?? (raw as T);
-}
+
 
 /** Creates a new agent-controlled wallet on Base via `circle wallet create`. */
 export async function createWallet(): Promise<AgentWallet> {
