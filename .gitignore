@@ -15,6 +15,9 @@
 .env.local
 .env.*.local
 
+# memory bank
+memory_bank/
+
 # misc
 .DS_Store
 *.pem
